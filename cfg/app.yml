@@ -26,20 +26,20 @@ spec:
       containers:
       - env:
         - name: DB_SERVICE_PREFIX_MAPPING
-          value: inventory-POSTGRESQL=inventory
+          value: inventory-POSTGRESQL=INVENTORY
         - name: INVENTORY_JNDI
           value: java:jboss/datasources/InventoryDS
-        - name: inventory_USERNAME
+        - name: INVENTORY_USERNAME
           valueFrom:
             secretKeyRef:
               key: database-user
               name: inventory-db
-        - name: inventory_PASSWORD
+        - name: INVENTORY_PASSWORD
           valueFrom:
             secretKeyRef:
               key: database-password
               name: inventory-db
-        - name: inventory_DATABASE
+        - name: INVENTORY_DATABASE
           valueFrom:
             secretKeyRef:
               key: database-name
