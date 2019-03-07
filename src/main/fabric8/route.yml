@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: v1
+#metadata:
+#  name: sampleapp
+#  labels:
+#    application: sampleapp
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: sampleapp

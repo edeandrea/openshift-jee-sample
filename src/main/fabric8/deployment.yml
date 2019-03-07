@@ -1,0 +1,66 @@
+kind: DeploymentConfig
+apiVersion: v1
+#metadata:
+#  name: sampleapp
+#  labels:
+#    deploymentconfig: sampleapp
+#    application: sampleapp
+spec:
+#  replicas: 1
+#  selector:
+#    app: sampleapp
+#    deploymentconfig: sampleapp
+#  strategy:
+#    type: Recreate
+#  triggers:
+#    - type: ConfigChange
+#    - type: ImageChange
+#      imageChangeParams:
+#        automatic: true
+#        containerNames:
+#          - sampleapp
+#        from:
+#          kind: ImageStreamTag
+#          name: sampleapp:latest
+  template:
+#    metadata:
+#      labels:
+#        app: sampleapp
+#        deploymentconfig: sampleapp
+    spec:
+      containers:
+#        - name: sampleapp
+#          image: sampleapp
+#          ports:
+#            - containerPort: 8080
+#              protocol: TCP
+#            - containerPort: 8778
+#              protocol: TCP
+#            - containerPort: 8443
+#              protocol: TCP
+        - env:
+            - name: DB_SERVICE_PREFIX_MAPPING
+              value: InventoryDS-postgresql=InventoryDS
+            - name: INVENTORYDS_DRIVER
+              value: postgresql
+            - name: InventoryDS_JNDI
+              value: java:jboss/datasources/InventoryDS
+            - name: INVENTORYDS_POSTGRESQL_SERVICE_PORT
+              value: '5432'
+            - name: INVENTORYDS_POSTGRESQL_SERVICE_HOST
+              value: inventory
+            - name: InventoryDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: inventory-db
+            - name: InventoryDS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: inventory-db
+            - name: InventoryDS_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: inventory-db
