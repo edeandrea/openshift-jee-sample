@@ -16,9 +16,11 @@
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
    <persistence-unit name="primary">
       <jta-data-source>java:jboss/datasources/InventoryDS</jta-data-source>
+      <class>com.mastertheboss.model.SimpleProperty</class>
       <properties>
          <!-- Properties for Hibernate -->
          <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+         <property name="hibernate.format_sql" value="true" />
          <property name="hibernate.show_sql" value="true" />
       </properties>
    </persistence-unit>

@@ -1,0 +1,68 @@
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  labels:
+    app: sample-app-2
+  name: sample-app-2
+spec:
+  replicas: 1
+  selector:
+    app: sample-app-2
+    deploymentconfig: sample-app-2
+  strategy:
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: sample-app-2
+        deploymentconfig: sample-app-2
+    spec:
+      containers:
+      - env:
+        - name: DB_SERVICE_PREFIX_MAPPING
+          value: inventory-POSTGRESQL=inventory
+        - name: INVENTORY_JNDI
+          value: java:jboss/datasources/InventoryDS
+        - name: inventory_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: inventory-db
+        - name: inventory_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: inventory-db
+        - name: inventory_DATABASE
+          valueFrom:
+            secretKeyRef:
+              key: database-name
+              name: inventory-db
+        - name: INVENTORY_POSTGRESQL_SERVICE_HOST
+          value: inventory
+        - name: INVENTORY_POSTGRESQL_SERVICE_PORT
+          value: "5432"
+        name: sample-app-2
+        ports:
+        - containerPort: 8778
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - sample-app-2
+      from:
+        kind: ImageStreamTag
+        name: sample-app-2:latest
